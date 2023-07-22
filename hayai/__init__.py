@@ -3,6 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
 import shutil
+import subprocess
 
 app = Flask(__name__)
 
@@ -76,6 +77,108 @@ def upload_file():
         <h1>はやい</h1>
 
         <blockquote>Upload an EPUB, receive a <b>"bi</b>onic" <b>EP</b>UB.</blockquote>
+
+        <form method=post enctype=multipart/form-data>
+          <input type="file" name="file">
+          <input type="submit" value="アップロード">
+        </form>
+
+        <br>
+
+        <a href="/reader">Need to reed?</a>
+
+        <br>
+        <br>
+
+        <hr>
+
+        This project is licensed with the <a href="https://github.com/Fuwn/hayai/blob/main/LICENSE">GNU General Public License v3.0</a>.
+    </body>
+</html>
+"""
+
+
+@app.route("/reader", methods=["GET", "POST"])
+def reader():
+    # Clean old EPUBs
+    if os.path.exists("./uploads"):
+        shutil.rmtree("uploads")
+
+    os.makedirs("./uploads")
+
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("no file part")
+
+            return redirect(request.url)
+
+        file = request.files["file"]
+
+        if file.filename == "":
+            flash("no selected file")
+
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(str(file.filename))
+
+            file.save(os.path.join("./uploads", filename))
+
+            output = (
+                subprocess.run(
+                    ["epr", "-d", f"./uploads/{filename}"], stdout=subprocess.PIPE
+                )
+                .stdout.decode("utf-8")
+                .replace("\n\n\n", "\n")
+                .replace("\n", "<br>")
+            )
+
+            return f"""
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>はやい</title>
+
+                <link rel="stylesheet" type="text/css" href="https://latex.now.sh/style.css">
+                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/palettes/base16-light.css">
+                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/risotto.css">
+                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/custom.css">
+            </head>
+
+            <body style="max-width: 120ch">
+                <style>text-align: center</style>
+
+                <h1>はやい</h1>
+
+                {output}
+
+                <br>
+
+                <hr>
+
+                This project is licensed with the <a href="https://github.com/Fuwn/hayai/blob/main/LICENSE">GNU General Public License v3.0</a>.
+            </body>
+        </html>
+        """
+
+    return """
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>はやい</title>
+
+        <link rel="stylesheet" type="text/css" href="https://latex.now.sh/style.css">
+        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/palettes/base16-light.css">
+        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/risotto.css">
+        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/custom.css">
+    </head>
+
+    <body>
+        <style>text-align: center;</style>
+
+        <h1>はやい</h1>
+
+        <blockquote>Upload an EPUB, read it in plain-text.</blockquote>
 
         <form method=post enctype=multipart/form-data>
           <input type="file" name="file">
