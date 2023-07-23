@@ -119,6 +119,7 @@ def page(main_content: str, footer: str) -> str:
         <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/palettes/base16-light.css">
         <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/risotto.css">
         <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/custom.css">
+        <link rel="icon" type="image/png" href="https://ps.fuwn.me/-wLj4vfbxrc/favicon.png">
     </head>
 
     <body>
