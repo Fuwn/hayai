@@ -21,7 +21,7 @@ def allowed_file(filename):
 
 @app.route("/uploads/<name>")
 def download_file(name):
-    return send_from_directory("../uploads", f"bionic_{name}")
+    return send_from_directory("../uploads", f"hayai_{name}")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -54,7 +54,7 @@ def upload_file():
             # Remove brec's unused artifacts folder
             shutil.rmtree(f"{filename}_zip")
             # Move "bionic" EPUB to uploads folder
-            shutil.move(f"bionic_{filename}", f"./uploads/bionic_{filename}")
+            shutil.move(f"hayai_{filename}", f"./uploads/hayai_{filename}")
 
             # Prompt user to download "bionic" EPUB
             return redirect(url_for("download_file", name=filename))

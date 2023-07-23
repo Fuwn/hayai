@@ -78,7 +78,7 @@ parser.add_argument("epubfile", help="put a path to your epub file in here")
 args = parser.parse_args()
 file_path = args.epubfile
 file_name = os.path.basename(file_path)
-epub_path = os.getcwd() + "/bionic_" + file_name
+epub_path = os.getcwd() + "/hayai_" + file_name
 unzip_path_folder = file_name + "_zip/"
 unzip_path = os.getcwd() + "/" + unzip_path_folder
 
