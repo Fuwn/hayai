@@ -59,43 +59,10 @@ def upload_file():
             # Prompt user to download "bionic" EPUB
             return redirect(url_for("download_file", name=filename))
 
-    return """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>はやい</title>
-
-        <link rel="stylesheet" type="text/css" href="https://latex.now.sh/style.css">
-        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/palettes/base16-light.css">
-        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/risotto.css">
-        <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/custom.css">
-    </head>
-
-    <body>
-        <style>text-align: center</style>
-
-        <h1>はやい</h1>
-
-        <blockquote>Upload an EPUB, receive a <b>"bi</b>onic" <b>EP</b>UB.</blockquote>
-
-        <form method=post enctype=multipart/form-data>
-          <input type="file" name="file">
-          <input type="submit" value="アップロード">
-        </form>
-
-        <br>
-
-        <a href="/reader">Need to reed?</a>
-
-        <br>
-        <br>
-
-        <hr>
-
-        This project is licensed with the <a href="https://github.com/Fuwn/hayai/blob/main/LICENSE">GNU General Public License v3.0</a>.
-    </body>
-</html>
-"""
+    return page(
+        '<blockquote>Upload an EPUB, receive a <b>"bi</b>onic" <b>EP</b>UB.</blockquote>',
+        '<a href="/reader">Want to read an EPUB?</a>',
+    )
 
 
 @app.route("/reader", methods=["GET", "POST"])
@@ -133,35 +100,16 @@ def reader():
                 .replace("\n", "<br>")
             )
 
-            return f"""
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>はやい</title>
+            return page(output, '<a href="/">Want to read another EPUB?</a>')
 
-                <link rel="stylesheet" type="text/css" href="https://latex.now.sh/style.css">
-                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/palettes/base16-light.css">
-                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/risotto.css">
-                <link rel="stylesheet" type="text/css" href="https://skybox.sh/css/custom.css">
-            </head>
+    return page(
+        "<blockquote>Upload an EPUB, read it in plain-text.</blockquote>",
+        '<a href="/">Want to convert an EPUB?</a>',
+    )
 
-            <body style="max-width: 120ch">
-                <style>text-align: center</style>
 
-                <h1>はやい</h1>
-
-                {output}
-
-                <br>
-
-                <hr>
-
-                This project is licensed with the <a href="https://github.com/Fuwn/hayai/blob/main/LICENSE">GNU General Public License v3.0</a>.
-            </body>
-        </html>
-        """
-
-    return """
+def page(main_content: str, footer: str) -> str:
+    return f"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -178,7 +126,7 @@ def reader():
 
         <h1>はやい</h1>
 
-        <blockquote>Upload an EPUB, read it in plain-text.</blockquote>
+        {main_content}
 
         <form method=post enctype=multipart/form-data>
           <input type="file" name="file">
@@ -189,7 +137,7 @@ def reader():
 
         <hr>
 
-        This project is licensed with the <a href="https://github.com/Fuwn/hayai/blob/main/LICENSE">GNU General Public License v3.0</a>.
+        <p>{footer}</p>
     </body>
 </html>
 """
