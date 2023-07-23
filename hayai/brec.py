@@ -50,7 +50,7 @@ class MyHTMLParser(HTMLParser):
 
 
 def bolding(text):
-    parts = re.findall(r"\w+|[^\s\w]+", text)
+    parts = text.split()
     new_text = ""
     for part in parts:
         if part in string.punctuation or part in string.digits:
