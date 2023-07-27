@@ -131,7 +131,7 @@ def page(main_content: str, footer: str) -> str:
 
         <form method=post enctype=multipart/form-data>
           <input type="file" name="file">
-          <input type="submit" value="アップロード">
+          <input type="submit" value="Upload">
         </form>
 
         <br>
