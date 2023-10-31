@@ -29,21 +29,6 @@ class MyHTMLParser(HTMLParser):
 
         data_html.append(("Data:", data))
 
-    def handle_comment(self, data):
-        pass
-
-    def handle_entityref(self, name):
-        c = chr(name2codepoint[name])
-
-    def handle_charref(self, name):
-        if name.startswith("x"):
-            c = chr(int(name[1:], 16))
-        else:
-            c = chr(int(name))
-
-    def handle_decl(self, data):
-        pass
-
 
 def bolding(text):
     parts = re.findall(r"[^\s]+", text)
