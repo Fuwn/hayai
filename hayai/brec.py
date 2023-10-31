@@ -50,11 +50,11 @@ class MyHTMLParser(HTMLParser):
 
 
 def bolding(text):
-    parts = text.split()
+    parts = re.findall(r"[^\s]+", text)
     new_text = ""
     for part in parts:
         if part in string.punctuation or part in string.digits:
-            new_text += part
+            new_text += " " + part
         else:
             if len(part) <= 3:
                 new_part = ""
@@ -103,6 +103,8 @@ for r, d, f in os.walk(unzip_path):
     for hfile in f:
         if hfile[-4:] == "html":
             htmls.append(os.path.join(r, hfile))
+        if hfile[-3:] == "htm":
+            htmls.append(os.path.join(r, hfile))
 
 
 for html in htmls:
@@ -126,14 +128,14 @@ for html in htmls:
             full_attr = []
             for attr in html_part[1][1]:
                 full_attr.append(attr[0] + f'="{attr[1]}"')
-            full_attr = ", ".join(full_attr)
+            full_attr = " ".join(full_attr)
             if not full_attr:
                 tag += full_attr + ">"
             else:
                 tag += " " + full_attr + ">"
             full_html += tag
         if html_part[0] == "End tag:":
-            tag = f"</{html_part[1]}>"
+            tag = f"</{html_part[1]}>\n"
             full_html += tag
     full_html = first_tags + full_html
 
@@ -145,4 +147,8 @@ for html in htmls:
 
 os.chdir(unzip_path)
 shutil.make_archive(epub_path, "zip", "./")
+try:
+    os.remove((epub_path + ".zip")[:-4])
+except:
+    pass
 os.rename((epub_path + ".zip"), (epub_path + ".zip")[:-4])
